@@ -83,28 +83,150 @@ function deleteNode(root, key){
 }
 
 function find(root, key){
-    let keyToFind = null;
-    let curr = root
 
-    while(curr.data !== key){
-        if( key < curr.data ){
-            curr = curr.left
-
+    try{
+    while(root !== null){
+        if( root.data === key ){
+            return root.data;
         }
 
-        if( key > curr.data ){
-            curr = curr.right
-
+        if( key < root.data ){
+            root = root.left
         }
 
-        if( key === curr.data){
-            return curr
+        if( key > root.data){
+            root = root.right
         }
-
-        return curr;
     }
-    return curr
+    return -1
 }
+catch{
+    console.log('Key was not in the tree!')
+}
+}
+
+
+function levelOrder(root) {
+    if (root === null || root === undefined){
+        throw new Error('No callback provided!');
+    }
+
+    let queue = [];
+    let treeNodes = [];
+    queue.push(root);
+
+    while (queue.length > 0) {
+        let curr = queue.shift();
+
+        console.log(curr.data);
+        treeNodes.push(curr.data)
+
+        if (curr.left !== null) queue.push(curr.left);
+        if (curr.right !== null) queue.push(curr.right);
+    }
+    return treeNodes;
+}
+
+function preOrder(root){
+    if(root === null){
+        return;
+    }
+    console.log(root.data);
+
+
+    preOrder(root.left);
+    preOrder(root.right);
+}
+
+function inOrder(root){
+    if(root === null){
+        return;
+    }
+
+
+    inOrder(root.left);
+    console.log(root.data);
+    inOrder(root.right);
+}
+
+function postOrder(root){
+    if(root === null){
+        return;
+    }
+
+    postOrder(root.left);
+    postOrder(root.right);
+
+    console.log(root.data);
+}
+
+function height(node){
+    if(node === null){
+        return -1;
+    }
+
+    let leftCounter = height(node.left);
+    let rightCounter = height(node.right);
+
+    return Math.max(leftCounter, rightCounter) + 1;
+}
+
+function depth(tree, nodeValue) {
+    let nodeDepth = 0;
+
+    while (tree !== null) {
+        if (tree.data === nodeValue) {
+            return nodeDepth;
+        }
+
+        if (nodeValue < tree.data) {
+            tree = tree.left;
+        } else {
+            tree = tree.right;
+        }
+
+        nodeDepth++;
+    }
+
+    return -1;
+}
+
+
+function isBalanced(root){
+    if(!root) return true;
+
+    let result = true;
+
+    function dfs(node){
+        if(!node) {
+            return 0;
+        }
+
+        let left = dfs(node.left);
+        let right = dfs(node.right)
+    
+    
+        if(left - right > 1){
+            result = false;
+        } 
+    
+        return Math.max(left, right) + 1;
+    }
+
+    dfs(root);
+    return result 
+}
+
+
+function rebalance(root){
+    let nodes = levelOrder(root);
+    console.log(nodes)
+
+    let balancedTree = tree(nodes);
+
+    return balancedTree;
+}
+
 
 
 let a = [7, 4, 23, 9];
@@ -114,14 +236,51 @@ console.log("Before Insert:");
 console.log((testTree));
 
 // Insert new keys
-testTree = insert(testTree, 24);
-testTree = insert(testTree, 1);
-testTree = insert(testTree, 2);
-testTree = insert(testTree, 124);
+
+testTree = insert(testTree, 777);
+testTree = insert(testTree, 7453);
+testTree = insert(testTree, 982);
+testTree = insert(testTree, 182);
+testTree = insert(testTree, 900);
+testTree = insert(testTree, 1234);
 // testTree = deleteNode(testTree, 1);
 
 console.log("After Insert:");
-console.log((testTree));
+console.log(JSON.stringify((testTree)));
 
-console.log('Found! ' + JSON.stringify(find(testTree, 1)))
+console.log('Find result --- ' + (find(testTree, 7)))
 
+console.log('levelorder---')
+levelOrder(testTree)
+console.log('preorder---')
+preOrder(testTree)
+console.log('inorder---')
+inOrder(testTree)
+console.log('postorder---')
+postOrder(testTree)
+
+
+// let node1 = find(testTree, 1)
+// console.log('HEIGHT')
+// console.log(height(node1))
+console.log('DEPTH')
+console.log(depth(testTree, 878787))
+console.log('isBalanced -----')
+console.log(isBalanced(testTree))
+
+testTree = rebalance(testTree)
+console.log('new balanced tree -----')
+console.log(testTree)
+
+console.log('isBalanced -----')
+console.log(isBalanced(testTree))
+
+
+console.log('levelorder---')
+levelOrder(testTree)
+console.log('preorder---')
+preOrder(testTree)
+console.log('inorder---')
+inOrder(testTree)
+console.log('postorder---')
+postOrder(testTree)
