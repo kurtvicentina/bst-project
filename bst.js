@@ -83,11 +83,11 @@ function deleteNode(root, key){
 }
 
 function find(root, key){
-
     try{
+
     while(root !== null){
         if( root.data === key ){
-            return root.data;
+            return root;
         }
 
         if( key < root.data ){
@@ -98,7 +98,6 @@ function find(root, key){
             root = root.right
         }
     }
-    return -1
 }
 catch{
     console.log('Key was not in the tree!')
@@ -127,35 +126,51 @@ function levelOrder(root) {
     return treeNodes;
 }
 
-function preOrder(root){
-    if(root === null){
-        return;
+function preOrder(root) {
+    if (root === null) {
+        throw new Error("Tree is null. Cannot perform pre-order traversal.");
     }
+    
     console.log(root.data);
 
-
-    preOrder(root.left);
-    preOrder(root.right);
+    if (root.left !== null) {
+        preOrder(root.left);
+    }
+    if (root.right !== null) {
+        preOrder(root.right);
+    }
 }
+
 
 function inOrder(root){
     if(root === null){
-        return;
+        throw new Error('Tree is null. Cannot perform in-order traversal.');
     }
 
 
-    inOrder(root.left);
+    if(root.left !== null){
+        inOrder(root.left);
+    }
+
     console.log(root.data);
-    inOrder(root.right);
+
+    if(root.right !== null){
+        inOrder(root.right);
+    }
 }
 
 function postOrder(root){
     if(root === null){
-        return;
+        throw new Error('Tree is null. Cannot perform post-order traversal.');
     }
 
-    postOrder(root.left);
-    postOrder(root.right);
+    if(root.left !== null){
+        postOrder(root.left);
+    }
+
+    if(root.right !== null){
+        postOrder(root.right);
+    };
 
     console.log(root.data);
 }
@@ -169,6 +184,15 @@ function height(node){
     let rightCounter = height(node.right);
 
     return Math.max(leftCounter, rightCounter) + 1;
+}
+
+function findHeight(tree, node){
+    let nodeToFind = find(tree, node)
+    console.log(nodeToFind.data)
+
+    if(nodeToFind !== null){
+        return height(nodeToFind) 
+    }
 }
 
 function depth(tree, nodeValue) {
@@ -231,6 +255,7 @@ function rebalance(root){
 
 let a = [7, 4, 23, 9];
 let testTree = tree(a);
+let b = null
 
 console.log("Before Insert:");
 console.log((testTree));
@@ -243,12 +268,14 @@ testTree = insert(testTree, 982);
 testTree = insert(testTree, 182);
 testTree = insert(testTree, 900);
 testTree = insert(testTree, 1234);
-// testTree = deleteNode(testTree, 1);
+testTree = deleteNode(testTree, 4);
 
 console.log("After Insert:");
 console.log(JSON.stringify((testTree)));
 
-console.log('Find result --- ' + (find(testTree, 7)))
+console.log('Find height result --- ' + (findHeight(testTree, 7)))
+console.log('Find depth result --- ' + (depth(testTree, 9)))
+console.log('Find result --- ' + JSON.stringify((find(testTree, 7))))
 
 console.log('levelorder---')
 levelOrder(testTree)
@@ -260,9 +287,8 @@ console.log('postorder---')
 postOrder(testTree)
 
 
-// let node1 = find(testTree, 1)
-// console.log('HEIGHT')
-// console.log(height(node1))
+
+console.log(height(testTree, 7))
 console.log('DEPTH')
 console.log(depth(testTree, 878787))
 console.log('isBalanced -----')
